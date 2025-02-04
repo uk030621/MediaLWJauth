@@ -18,25 +18,25 @@ const Navbar = () => {
       <nav className="navbar">
         <ul className="nav-links flex justify-center items-center">
           <li>
-            <Link href="/" className="text-sm md:text-lg lg:text-xl">
+            <Link href="/" className="text-xs md:text-lg lg:text-xl">
               Home
             </Link>
           </li>
           <li>
-            <Link href="/youtube" className="text-sm md:text-lg lg:text-xl">
+            <Link href="/youtube" className="text-xs md:text-lg lg:text-xl">
               YouTube
             </Link>
           </li>
           <li>
             <Link
               href="/customsearch"
-              className="text-sm md:text-lg lg:text-xl"
+              className="text-xs md:text-lg lg:text-xl"
             >
               URL
             </Link>
           </li>
           <li>
-            <Link href="/enhanced" className="text-sm md:text-lg lg:text-xl">
+            <Link href="/enhanced" className="text-xs md:text-lg lg:text-xl">
               Library
             </Link>
           </li>
@@ -45,7 +45,7 @@ const Navbar = () => {
               onClick={() => signOut()}
               className="text-sm md:text-base lg:text-lg bg-[1b1818] text-white px-3 py-1 rounded-md hover:text-yellow-200 hover:underline"
             >
-              Sign Out
+              Exit
             </button>
           </li>
         </ul>
