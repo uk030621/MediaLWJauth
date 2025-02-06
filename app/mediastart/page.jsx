@@ -5,6 +5,7 @@ import YouTube from "react-youtube"; // Import the YouTube component
 //import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function HomePage() {
   const videos = [
@@ -80,7 +81,12 @@ export default function HomePage() {
           <div className="flex justify-center items-center">
             <ul className="text-left ml-8 mt-8 text-slate-800">
               <li className="text-base font-thin">
-                ❤️ Add your favourite YouTube videos.
+                <Link
+                  href="/youtube"
+                  className="flex items-center gap-2 hover:text-blue-500"
+                >
+                  ❤️ Add your favourite YouTube videos.
+                </Link>
                 <div
                   style={{
                     display: "flex",
