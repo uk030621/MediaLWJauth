@@ -132,10 +132,20 @@ export default function HomePage() {
                 </div>
               </li>
               <li className="mt-8 text-base font-thin">
-                ➕ Add URLs for quick reference.
+                <Link
+                  href="/customsearch"
+                  className="flex items-center gap-2 hover:text-blue-500"
+                >
+                  ➕ Add URLs for quick reference.
+                </Link>
               </li>
               <li className="mt-8 text-base font-thin">
-                🔍 Easily search your library.
+                <Link
+                  href="/enhanced"
+                  className="flex items-center gap-2 hover:text-blue-500"
+                >
+                  🔍 Easily search your library.
+                </Link>
               </li>
               <li className="mt-8 text-base font-thin">
                 🏠 Centralise your media links.
