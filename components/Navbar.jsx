@@ -41,12 +41,16 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <button
-              onClick={() => signOut()}
-              className="text-sm md:text-base lg:text-lg bg-[1b1818] text-white px-3 py-1 rounded-md hover:text-yellow-200 hover:underline"
+            <Link
+              href="#"
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default link behavior
+                signOut(); // Call signOut function
+              }}
+              className="text-xs md:text-lg lg:text-xl cursor-pointer"
             >
               Exit
-            </button>
+            </Link>
           </li>
         </ul>
       </nav>
