@@ -36,15 +36,15 @@ export default function HomePage() {
       <div className="flex flex-col items-left">
         <div className={styles.homeContainer}>
           <div className="flex  flex-col justify-center mr-5">
-            <p className="font-thin ml-1 text-sm">{session?.user?.email}</p>
+            {/*<p className="font-thin ml-1 text-sm">{session?.user?.email}</p>*/}
             <div className="flex justify-center gap-2 mt-2 mb-1">
               {dateTime ? (
                 <>
                   <p className=" text-sm font-thin text-black">
-                    {dateTime.toLocaleDateString()}
+                    {dateTime.toLocaleTimeString()}hr
                   </p>
-                  <p className=" text-sm font-thin text-black">
-                    {dateTime.toLocaleTimeString()}
+                  <p className=" ml-3 text-sm font-thin text-black">
+                    {dateTime.toLocaleDateString()}
                   </p>
                 </>
               ) : (
