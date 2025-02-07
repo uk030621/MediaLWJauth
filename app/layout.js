@@ -1,6 +1,7 @@
 import "./globals.css";
 import { AuthProvider } from "./providers";
 import Navbar from "@/components/Navbar";
+import AutoLogout from "./autologout/page"; // Import auto-logout component
 
 export const metadata = {
   title: "Media Library",
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <Navbar />
+          <AutoLogout /> {/* Auto-logout added here */}
           {children}
           <footer>
             <p>
