@@ -39,6 +39,16 @@ header {
   padding: 0rem 0rem;
 }
 
+.nav-links-container {
+  overflow-x: auto; /* 🔹 Enable horizontal scrolling */
+  white-space: nowrap; /* 🔹 Prevent items from wrapping */
+  -webkit-overflow-scrolling: touch; /* 🔹 Smooth scrolling on mobile */
+}
+
+.nav-links-container::-webkit-scrollbar {
+  display: none; /* 🔹 Hide scrollbar for better aesthetics */
+}
+
 /*.logo {
   margin-left: 20px;
   opacity: 1;
