@@ -4,9 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import YouTube from "react-youtube";
 import Link from "next/link";
-import { useSession } from "next-auth/react"; // Import NextAuth for user session
+import { useSession } from "next-auth/react";
 
-// Utility function to decode HTML entities
 function decodeHtmlEntities(text) {
   const textArea = document.createElement("textarea");
   textArea.innerHTML = text;
@@ -14,31 +13,37 @@ function decodeHtmlEntities(text) {
 }
 
 export default function Home() {
-  const { data: session } = useSession(); // Get logged-in user session
-  const [selectedMedia, setSelectedMedia] = useState(null); // Selected media for viewing
+  const { data: session } = useSession();
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const [storedUrls, setStoredUrls] = useState([]);
   const [filteredUrls, setFilteredUrls] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const selectedMediaRef = useRef(null); // Ref to auto-scroll to selected media
+  const selectedMediaRef = useRef(null);
 
   const collectionRoute = "/api/urlhtml";
 
-  // Fetch media URLs from the backend for the logged-in user
   const fetchUrls = useCallback(async () => {
-    if (!session?.user?.id) return; // Ensure user is logged in
+    if (!session?.user?.id) return;
 
     try {
       setLoading(true);
+      setError("");
       const res = await fetch(`${collectionRoute}?userId=${session.user.id}`);
       if (!res.ok) throw new Error("Failed to fetch URLs");
+
       const data = await res.json();
       setStoredUrls(data.urls);
-      setFilteredUrls(data.urls); // Initialize filtered list
+      setFilteredUrls(data.urls);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load media URLs.");
+      console.error("Fetch error:", err);
+      setError("Failed to load media. Refreshing...");
+
+      // 🚀 **Auto-refresh page after 2 seconds on failure**
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -48,7 +53,6 @@ export default function Home() {
     fetchUrls();
   }, [fetchUrls]);
 
-  // Scroll to selected media
   useEffect(() => {
     if (selectedMedia && selectedMediaRef.current) {
       selectedMediaRef.current.scrollIntoView({
@@ -58,7 +62,6 @@ export default function Home() {
     }
   }, [selectedMedia]);
 
-  // Filter the list based on the search query
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -68,7 +71,6 @@ export default function Home() {
     setFilteredUrls(filtered);
   };
 
-  // Determine the content type of a URL
   const getContentType = (url) => {
     const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
     if (youtubeRegex.test(url) || url.length === 11) return "youtube";
@@ -81,53 +83,43 @@ export default function Home() {
   const extractYouTubeId = (url) => {
     if (url.length === 11) return url;
     const match = url.match(
-      /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/
+      /(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([^"&?/\s]{11})/
     );
     return match ? match[1] : null;
   };
 
-  // Render selected media dynamically
   const renderSelectedMedia = (media) => {
     if (!media) return null;
 
     const contentType = getContentType(media.url);
-
     switch (contentType) {
       case "image":
         return (
           <Image
             src={media.url}
             alt={media.title}
-            className="w-full max-h-[400px] object-contain rounded-lg"
             width={800}
             height={400}
-            loading="eager"
+            className="w-full max-h-[400px] rounded-lg object-contain"
           />
         );
       case "video":
         return (
-          <video
-            controls
-            className="w-full max-h-[400px] rounded-lg"
-            preload="metadata"
-          >
+          <video controls className="w-full max-h-[400px] rounded-lg">
             <source src={media.url} type="video/mp4" />
-            Your browser does not support the video tag.
           </video>
         );
-      case "youtube": {
-        const videoId = extractYouTubeId(media.url);
+      case "youtube":
         return (
           <YouTube
-            videoId={videoId}
+            videoId={extractYouTubeId(media.url)}
             opts={{
               width: "100%",
               height: "400px",
-              playerVars: { autoplay: 0, modestbranding: 1 },
+              playerVars: { autoplay: 0 },
             }}
           />
         );
-      }
       default:
         return (
           <a
@@ -142,7 +134,6 @@ export default function Home() {
     }
   };
 
-  // Delete a media item
   const handleDelete = async (id) => {
     try {
       const res = await fetch(collectionRoute, {
@@ -152,7 +143,7 @@ export default function Home() {
       });
       if (!res.ok) throw new Error("Failed to delete media.");
       fetchUrls();
-      if (selectedMedia && selectedMedia._id === id) setSelectedMedia(null); // Deselect deleted media
+      if (selectedMedia && selectedMedia._id === id) setSelectedMedia(null);
     } catch (err) {
       console.error(err);
       setError("Failed to delete media.");
@@ -161,14 +152,12 @@ export default function Home() {
 
   return (
     <div className="w-full mx-auto p-4 background-container">
-      <div className="flex flex-col items-center justify-start">
-        <h2 className="text-2xl font-thin ">This Media Library</h2>
-        <h2 className="text-1xl font-thin ">belongs to</h2>
-        <h2 className="text-2xl font-semibold mb-4">
-          {/*{session?.user?.name?.split(" ")[0]}, Media Library*/}
-          {session?.user?.name}
-        </h2>
+      <div className="flex flex-col items-center">
+        <h2 className="text-2xl font-thin">This Media Library</h2>
+        <h2 className="text-1xl font-thin">belongs to</h2>
+        <h2 className="text-2xl font-semibold mb-4">{session?.user?.name}</h2>
       </div>
+
       <div className="flex items-center justify-center">
         <Link href="/youtube">
           <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
@@ -183,21 +172,19 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center items-center space-x-3 mb-4">
-        {/* Search Field */}
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearch}
           placeholder="Search by title..."
-          className="w-full p-2 border rounded-md h-10"
+          className="w-full p-2 border rounded-md"
         />
-
         <button
           onClick={() => {
-            setSearchQuery(""); // Clear the search query
-            handleSearch({ target: { value: "" } }); // Trigger handleSearch to restore all images
+            setSearchQuery("");
+            handleSearch({ target: { value: "" } });
           }}
-          className="bg-gray-700 rounded-md text-white px-4 h-10 text-xs"
+          className="bg-gray-700 text-white px-4 h-10 rounded-md"
         >
           Clear
         </button>
@@ -229,15 +216,15 @@ export default function Home() {
               </h3>
               <button
                 onClick={() => setSelectedMedia(media)}
-                className="text-slate-700 px-4 py-2 rounded-md w-fit mr-10 text-xl"
+                className="text-slate-700 px-4 py-2 rounded-md mr-10 text-xl"
               >
-                📺<span className="text-xs"> View</span>
+                📺 <span className="text-xs">View</span>
               </button>
               <button
                 onClick={() => handleDelete(media._id)}
-                className="text-slate-700 px-4 py-2 rounded-md mt-2 w-fit text-xl"
+                className="text-slate-700 px-4 py-2 rounded-md text-xl"
               >
-                🗑️<span className="text-xs"> Delete</span>
+                🗑️ <span className="text-xs">Delete</span>
               </button>
             </li>
           ))}
