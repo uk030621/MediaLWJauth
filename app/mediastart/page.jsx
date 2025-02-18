@@ -242,8 +242,15 @@ export default function HomePage() {
                 </Link>
               </li>
               <li className="mt-8 text-base font-thin">
-                🏠 Centralise your media links.
+                <Link
+                  href="/enhanced"
+                  className="flex items-center gap-2 hover:text-blue-500"
+                >
+                  {" "}
+                  🏠 Centralise your media links.
+                </Link>
               </li>
+
               {/*<li className="mt-6">🏆 Bonus applications included.</li>*/}
             </ul>
           </div>
