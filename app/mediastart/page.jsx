@@ -37,24 +37,6 @@ export default function HomePage() {
 
       <div className="flex flex-col items-left">
         <div className={styles.homeContainer}>
-          <div className="flex  flex-col justify-center mr-5">
-            {/*<p className="font-thin ml-1 text-sm">{session?.user?.email}</p>*/}
-            <div className="flex justify-center gap-2 mt-2 mb-1">
-              {dateTime ? (
-                <>
-                  <p className=" text-sm font-thin text-black">
-                    {dateTime.toLocaleTimeString()}hr
-                  </p>
-                  <p className=" ml-3 text-sm font-thin text-black">
-                    {dateTime.toLocaleDateString()}
-                  </p>
-                </>
-              ) : (
-                <p className="text-sm text-black">Loading time...</p>
-              )}
-            </div>
-          </div>
-
           <h1 className={styles.gradientText}>
             Welcome{" "}
             <span className="font-bold">
@@ -62,6 +44,23 @@ export default function HomePage() {
             </span>{" "}
             To Your Media Library
           </h1>
+          <div className="flex  flex-col justify-center mr-5">
+            {/*<p className="font-thin ml-1 text-sm">{session?.user?.email}</p>*/}
+            <div className="flex justify-center gap-2 mb-1">
+              {dateTime ? (
+                <>
+                  <p className="mr-5 text-sm font-thin text-black">
+                    {dateTime.toLocaleDateString()}
+                  </p>
+                  <p className="text-sm font-thin text-black">
+                    {dateTime.toLocaleTimeString()}hr
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm text-black">Loading time...</p>
+              )}
+            </div>
+          </div>
           <p className={styles.description}>
             Keep your most important media in a personal repository for easy
             reference.
@@ -80,7 +79,7 @@ export default function HomePage() {
           </div>*/}
 
           {/* Explanatory Dropdown */}
-          <div className="mt-3">
+          <div className="mt-2">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="text-sm text-gray-600 hover:underline"
@@ -174,7 +173,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-center items-center">
-            <ul className="text-left ml-8 mt-8 text-slate-800">
+            <ul className="text-left ml-8 mt-4 text-slate-800">
               <li className="text-base font-thin">
                 <Link
                   href="/youtube"
