@@ -145,8 +145,13 @@ export default function Home() {
       fetchUrls();
       if (selectedMedia && selectedMedia._id === id) setSelectedMedia(null);
     } catch (err) {
-      console.error(err);
-      setError("Failed to delete media.");
+      console.error("Delete error:", err);
+      setError("Failed to delete media. Refreshing...");
+
+      // 🚀 **Auto-refresh page after 2 seconds on failure**
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 
