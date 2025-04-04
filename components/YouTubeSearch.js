@@ -73,16 +73,32 @@ const YouTubeSearch = () => {
     }
   };
 
-  const handleCopyVideoID = (videoId, title) => {
-    navigator.clipboard
-      .writeText(videoId)
-      .then(async () => {
+  const handleCopyVideoID = async (videoId, title) => {
+    const retryLimit = 3; // Maximum number of retries
+    let retryCount = 0;
+    let success = false;
+
+    while (retryCount < retryLimit && !success) {
+      try {
+        await navigator.clipboard.writeText(videoId);
         alert("Video ID copied to clipboard and added to the library!");
         await handleAddMedia(videoId, title);
-      })
-      .catch((err) => {
-        console.error("Failed to copy the video ID:", err);
-      });
+        success = true; // Mark as successful
+      } catch (err) {
+        retryCount++;
+        console.error(
+          `Attempt ${retryCount} - Failed to copy the video ID:`,
+          err
+        );
+
+        if (retryCount < retryLimit) {
+          console.log("Retrying...");
+        } else {
+          console.error("All retry attempts failed.");
+          alert("Failed to copy the video ID after several attempts.");
+        }
+      }
+    }
   };
 
   // Function to sanitize and decode text
