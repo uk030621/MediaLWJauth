@@ -87,12 +87,20 @@ export default function HomePage() {
               {isDropdownOpen ? "Hide Explanation" : "How does this work?"}
             </button>
             {isDropdownOpen && (
-              <div className="mt-4 text-left text-sm bg-gray-50 border rounded-lg p-4">
+              <div className="mt-2 text-left text-sm bg-gray-50 border rounded-lg p-4">
                 {/*<p className="text-gray-800 font-extrabold">
                   Guide for Media Library App
                 </p>*/}
-                <ul className="list-disc list-inside text-gray-700 mt-2">
-                  <p>
+                <ul className="list-disc list-inside text-gray-700">
+                  <div className="text-right">
+                    <Link
+                      className="bg-amber-200 px-4 py-2 rounded-lg pt-2 text-right "
+                      href="\contact"
+                    >
+                      Contact Developer
+                    </Link>
+                  </div>
+                  <p className="mt-2">
                     <strong>Introduction</strong>
                   </p>
                   <p className="text-sm mb-3">
