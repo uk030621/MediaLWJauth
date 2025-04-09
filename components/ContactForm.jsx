@@ -53,6 +53,7 @@ export default function ContactForm() {
             type="text"
             id="fullname"
             placeholder="John Doe"
+            className="bg-white"
           />
         </div>
 
@@ -64,6 +65,7 @@ export default function ContactForm() {
             type="text"
             id="email"
             placeholder="john@gmail.com"
+            className="bg-white"
           />
         </div>
 

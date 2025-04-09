@@ -156,85 +156,92 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full mx-auto p-4 background-container">
-      <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-thin">This Media Library</h2>
-        <h2 className="text-1xl font-thin">belongs to</h2>
-        <h2 className="text-2xl font-semibold mb-4">{session?.user?.name}</h2>
-      </div>
+    <div className="bg-background background-container">
+      <div className="w-full mx-auto p-4 ">
+        <div className="flex flex-col items-center">
+          <h2 className="text-2xl font-thin">This Media Library</h2>
+          <h2 className="text-1xl font-thin">belongs to</h2>
+          <h2 className="text-2xl font-semibold mb-4">{session?.user?.name}</h2>
+        </div>
 
-      <div className="flex items-center justify-center">
-        <Link href="/youtube">
-          <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
-            🔍 YouTubes
-          </button>
-        </Link>
-        <Link href="/customsearch">
-          <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
-            🔍 URLs
-          </button>
-        </Link>
-      </div>
+        <div className="flex items-center justify-center">
+          <Link href="/youtube">
+            <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
+              🔍 YouTubes
+            </button>
+          </Link>
+          <Link href="/customsearch">
+            <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
+              🔍 URLs
+            </button>
+          </Link>
+        </div>
 
-      <div className="flex justify-center items-center space-x-3 mb-4">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Search by title..."
-          className="w-full p-2 border rounded-md"
-        />
-        <button
-          onClick={() => {
-            setSearchQuery("");
-            handleSearch({ target: { value: "" } });
-          }}
-          className="bg-gray-700 text-white px-4 h-10 rounded-md"
-        >
-          Clear
-        </button>
-      </div>
-
-      {selectedMedia && (
-        <div ref={selectedMediaRef} className="mb-6 p-4 border rounded-md">
-          <h3 className="text-xl font-semibold mb-4">{selectedMedia.title}</h3>
-          {renderSelectedMedia(selectedMedia)}
+        <div className="flex justify-center items-center space-x-3 mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search by title..."
+            className="w-full p-2 border rounded-md"
+          />
           <button
-            onClick={() => setSelectedMedia(null)}
-            className="bg-gray-500 text-white px-4 py-2 rounded-md mt-4"
+            onClick={() => {
+              setSearchQuery("");
+              handleSearch({ target: { value: "" } });
+            }}
+            className="bg-gray-700 text-white px-4 h-10 rounded-md"
           >
-            Close
+            Clear
           </button>
         </div>
-      )}
 
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        {selectedMedia && (
+          <div ref={selectedMediaRef} className="mb-6 p-4 border rounded-md">
+            <h3 className="text-xl font-semibold mb-4">
+              {selectedMedia.title}
+            </h3>
+            {renderSelectedMedia(selectedMedia)}
+            <button
+              onClick={() => setSelectedMedia(null)}
+              className="bg-gray-500 text-white px-4 py-2 rounded-md mt-4"
+            >
+              Close
+            </button>
+          </div>
+        )}
 
-      {loading ? (
-        <p className="text-gray-500">Loading...</p>
-      ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredUrls.map((media) => (
-            <li key={media._id} className="p-4 border bg-slate-300 rounded-md">
-              <h3 className="text-lg text-black font-thin mb-2">
-                {decodeHtmlEntities(media.title)}
-              </h3>
-              <button
-                onClick={() => setSelectedMedia(media)}
-                className="text-slate-700 px-4 py-2 rounded-md mr-10 text-xl"
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+        {loading ? (
+          <p className="text-gray-500">Loading...</p>
+        ) : (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredUrls.map((media) => (
+              <li
+                key={media._id}
+                className="p-4 border bg-slate-300 rounded-md"
               >
-                📺 <span className="text-xs">View</span>
-              </button>
-              <button
-                onClick={() => handleDelete(media._id)}
-                className="text-slate-700 px-4 py-2 rounded-md text-xl"
-              >
-                🗑️ <span className="text-xs">Delete</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+                <h3 className="text-lg text-black font-thin mb-2">
+                  {decodeHtmlEntities(media.title)}
+                </h3>
+                <button
+                  onClick={() => setSelectedMedia(media)}
+                  className="text-slate-700 px-4 py-2 rounded-md mr-10 text-xl"
+                >
+                  📺 <span className="text-xs">View</span>
+                </button>
+                <button
+                  onClick={() => handleDelete(media._id)}
+                  className="text-slate-700 px-4 py-2 rounded-md text-xl"
+                >
+                  🗑️ <span className="text-xs">Delete</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

@@ -27,7 +27,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="background-container">
+    <div className="background-container bg-background">
       {/* Video Background */}
       {/* Uncomment if needed
       <video autoPlay muted loop playsInline className="background-video">
@@ -44,6 +44,7 @@ export default function HomePage() {
             </span>{" "}
             To Your Media Library
           </h1>
+
           <div className="flex  flex-col justify-center mr-5">
             {/*<p className="font-thin ml-1 text-sm">{session?.user?.email}</p>*/}
             <div className="flex justify-center gap-2 mb-1">
@@ -92,12 +93,18 @@ export default function HomePage() {
                   Guide for Media Library App
                 </p>*/}
                 <ul className="list-disc list-inside text-gray-700">
-                  <div className="text-right">
+                  <div className="flex gap-4 text-right">
                     <Link
-                      className="bg-amber-200 px-4 py-2 rounded-lg pt-2 text-right "
+                      className="bg-amber-200 px-4 py-2 text-xs rounded-lg pt-2 text-right "
                       href="\contact"
                     >
                       Contact Developer
+                    </Link>
+                    <Link
+                      className="bg-amber-200 px-4 py-2 text-xs rounded-lg pt-2 text-right "
+                      href="\messagelist"
+                    >
+                      Messages - Admin 🚫
                     </Link>
                   </div>
                   <p className="mt-2">

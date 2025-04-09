@@ -116,93 +116,95 @@ const YouTubeSearch = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 background-container">
-      <h1 className="text-2xl font-bold mt-4 text-left">
-        YouTube Video Search
-      </h1>
+    <div className="bg-background background-container ">
+      <div className="container mx-auto px-4 ">
+        <h1 className="text-2xl font-bold mt-4 text-left">
+          YouTube Video Search
+        </h1>
 
-      <div className="flex justify-between items-center mt-4">
-        <button
-          className="bg-black text-white p-2 rounded-md"
-          onClick={() => router.back()}
-        >
-          ⬅️ Back
-        </button>
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search YouTube"
-          className="border p-2 w-full sm:w-auto rounded-md"
-        />
-        <div className="flex gap-4">
+        <div className="flex justify-between items-center mt-4">
           <button
-            onClick={handleSearch}
-            className="bg-blue-500 text-white p-2 rounded-md w-full sm:w-auto"
+            className="bg-black text-white p-2 rounded-md"
+            onClick={() => router.back()}
           >
-            Search
-          </button>
-          <button
-            onClick={handleClear}
-            className="bg-black text-white p-2 rounded-md w-full sm:w-auto"
-          >
-            Clear/Reset
+            ⬅️ Back
           </button>
         </div>
-      </div>
 
-      <div className="mt-4 flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-2">
-        <label htmlFor="maxResults" className="text-sm font-semibold">
-          Max Results:
-        </label>
-        <select
-          id="maxResults"
-          value={maxResults}
-          onChange={(e) => setMaxResults(Number(e.target.value))}
-          className="border p-2 rounded-md"
-        >
-          {[5, 10, 20, 30, 40, 50].map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {videos.map((video) => (
-          <div
-            key={video.id.videoId}
-            className="border p-4 flex flex-col rounded-md bg-white shadow-md"
-          >
-            <img
-              src={video.snippet.thumbnails.medium.url}
-              alt={video.snippet.title}
-              className="w-full h-auto rounded-md"
-            />
-            <div className="mt-3">
-              <h3 className="font-bold text-lg">
-                {he.decode(video.snippet.title)}
-              </h3>
-              <p className="text-sm text-gray-700">
-                {sanitizeText(video.snippet.description)}
-              </p>
-              <button
-                className="bg-green-500 text-white p-2 mt-2 rounded-md w-full"
-                onClick={() =>
-                  handleCopyVideoID(video.id.videoId, video.snippet.title)
-                }
-              >
-                Add to Library
-              </button>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-center mt-4 space-y-3 sm:space-y-0 sm:space-x-2">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search YouTube"
+            className="border p-2 w-full sm:w-auto rounded-md"
+          />
+          <div className="flex gap-4">
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 text-white p-2 rounded-md w-full sm:w-auto"
+            >
+              Search
+            </button>
+            <button
+              onClick={handleClear}
+              className="bg-black text-white p-2 rounded-md w-full sm:w-auto"
+            >
+              Clear/Reset
+            </button>
           </div>
-        ))}
+        </div>
+
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-2">
+          <label htmlFor="maxResults" className="text-sm font-semibold">
+            Max Results:
+          </label>
+          <select
+            id="maxResults"
+            value={maxResults}
+            onChange={(e) => setMaxResults(Number(e.target.value))}
+            className="border p-2 rounded-md"
+          >
+            {[5, 10, 20, 30, 40, 50].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {videos.map((video) => (
+            <div
+              key={video.id.videoId}
+              className="border p-4 flex flex-col rounded-md bg-white shadow-md"
+            >
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+                className="w-full h-auto rounded-md"
+              />
+              <div className="mt-3">
+                <h3 className="font-bold text-lg">
+                  {he.decode(video.snippet.title)}
+                </h3>
+                <p className="text-sm text-gray-700">
+                  {sanitizeText(video.snippet.description)}
+                </p>
+                <button
+                  className="bg-green-500 text-white p-2 mt-2 rounded-md w-full"
+                  onClick={() =>
+                    handleCopyVideoID(video.id.videoId, video.snippet.title)
+                  }
+                >
+                  Add to Library
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
