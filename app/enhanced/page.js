@@ -164,7 +164,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold mb-4">{session?.user?.name}</h2>
         </div>
 
-        <div className="flex items-center justify-center">
+        {/*<div className="flex items-center justify-center">
           <Link href="/youtube">
             <button className="bg-black rounded-md text-white mr-3 mb-4 p-2 text-xs">
               🔍 YouTubes
@@ -175,7 +175,7 @@ export default function Home() {
               🔍 URLs
             </button>
           </Link>
-        </div>
+        </div>*/}
 
         <div className="flex justify-center items-center space-x-3 mb-4">
           <input

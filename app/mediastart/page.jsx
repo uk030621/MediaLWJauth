@@ -6,6 +6,7 @@ import YouTube from "react-youtube"; // Import the YouTube component
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // For redirection
 
 export default function HomePage() {
   const videos = [
@@ -15,7 +16,20 @@ export default function HomePage() {
 
   const { data: session } = useSession();
   const [dateTime, setDateTime] = useState(new Date());
+  const router = useRouter(); // Initialize router using useRouter
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL; // Access the admin email from env
+  const [showDialog, setShowDialog] = useState(false); // Track dialog visibility
+
+  const handleAdminClick = () => {
+    if (session?.user.email !== adminEmail) {
+      // Show dialog box
+      setShowDialog(true);
+    } else {
+      // Navigate to admin page
+      router.push("/messagelist");
+    }
+  };
 
   useEffect(() => {
     const now = new Date();
@@ -100,12 +114,32 @@ export default function HomePage() {
                     >
                       Contact Developer
                     </Link>
-                    <Link
-                      className="bg-amber-200 px-4 py-2 text-xs rounded-lg pt-2 text-right "
-                      href="\messagelist"
+                    {/* Admin Link */}
+                    {/* Admin Button */}
+                    <button
+                      className="bg-amber-200 px-4 py-2 text-xs rounded-lg pt-2 text-right"
+                      onClick={handleAdminClick}
                     >
-                      Messages - Admin 🚫
-                    </Link>
+                      Admin 🚫
+                    </button>
+
+                    {/* Simple Custom Dialog */}
+                    {showDialog && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg text-center ml-2 mr-2">
+                          <p className="text-gray-700">
+                            Access Denied. You do not have permission to view
+                            this page.
+                          </p>
+                          <button
+                            onClick={() => setShowDialog(false)} // Close dialog
+                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          >
+                            OK
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <p className="mt-2">
                     <strong>Introduction</strong>
@@ -171,7 +205,10 @@ export default function HomePage() {
                   <li>
                     Region-Based Restrictions: Some YouTube videos, especially
                     those based in the USA, may impose advertisements despite
-                    being stored in the library.
+                    being stored in the library. They may also prevent access
+                    from other countries and/or regions. Tip: If you have a VPN
+                    installed on your device switch server to the source country
+                    eg, use a USA server.
                   </li>
                   <p className="mt-3">
                     <strong>
