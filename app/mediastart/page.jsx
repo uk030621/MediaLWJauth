@@ -198,6 +198,12 @@ export default function HomePage() {
                     <strong>Known Limitations</strong>
                   </p>
                   <li>
+                    Add to Library or Delete: It is unusual but possible that an
+                    add or delete function may fail on first attempt. It is
+                    however probable that it will execute properly on a second
+                    attempt.
+                  </li>
+                  <li>
                     YouTube Sign-In Requirement: Occasionally, certain videos
                     may require a YouTube sign-in to play directly within the
                     app.
@@ -225,7 +231,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-center items-center">
-            <ul className="text-left ml-8 mt-4 text-slate-800">
+            <ul className="text-left  mt-4 text-slate-800">
               <li className="text-base font-thin">
                 <Link
                   href="/youtube"
@@ -233,48 +239,50 @@ export default function HomePage() {
                 >
                   ❤️ Add your favourite YouTube videos.
                 </Link>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                    marginTop: "10px",
-                  }}
-                >
-                  {videos.map((video, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        margin: "0 10px",
-                        marginRight: "80px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <YouTube
-                        videoId={video.id}
-                        opts={{
-                          width: "250", // Adjust for responsiveness
-                          height: "150",
-                          playerVars: {
-                            autoplay: 0,
-                            modestbranding: 1,
-                            rel: 0,
-                          },
-                        }}
-                      />
-                      <p
+                <div className="border-4 rounded-lg bg-slate-200">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                      marginTop: "10px",
+                    }}
+                  >
+                    {videos.map((video, index) => (
+                      <div
+                        key={index}
                         style={{
-                          marginTop: "5px",
-                          fontSize: "12px",
-                          color: "gray",
+                          margin: "0 10px",
+                          marginRight: "10px",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
                         }}
                       >
-                        {video.title}
-                      </p>
-                    </div>
-                  ))}
+                        <YouTube
+                          videoId={video.id}
+                          opts={{
+                            width: "250", // Adjust for responsiveness
+                            height: "150",
+                            playerVars: {
+                              autoplay: 0,
+                              modestbranding: 1,
+                              rel: 0,
+                            },
+                          }}
+                        />
+                        <p
+                          style={{
+                            marginTop: "5px",
+                            fontSize: "12px",
+                            color: "gray",
+                          }}
+                        >
+                          {video.title}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </li>
               <li className="mt-8 text-base font-thin">

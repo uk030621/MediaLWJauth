@@ -95,93 +95,95 @@ export default function MessageList() {
 
   // Render the message list
   return (
-    <div className="min-h-screen p-5 bg-gray-50 bg-background">
-      <div className="flex gap-4 items-center self-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-5">Messages</h1>
-        {/* Unhide All Messages Button */}
-        <button
-          onClick={unhideAll}
-          className="mb-5 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
-        >
-          Unhide All Messages
-        </button>
-      </div>
-
-      {/* Search Field */}
-      <div className="mb-5">
-        <input
-          type="text"
-          placeholder="Search messages..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="w-full p-3 border border-gray-300 rounded-md bg-white"
-        />
-        <button
-          onClick={clearSearch}
-          className="mt-2 px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600"
-        >
-          Clear Search
-        </button>
-      </div>
-
-      {loading ? (
-        <p className="text-gray-600">Loading messages...</p>
-      ) : filteredMessages.length > 0 ? (
-        <div className="space-y-4">
-          {filteredMessages.map(
-            (message) =>
-              !hiddenMessages.includes(message._id) ? ( // Exclude hidden messages
-                <div
-                  key={message._id}
-                  className={`p-4 border border-gray-200 bg-white rounded shadow ${
-                    message.done ? "bg-green-100" : ""
-                  }`}
-                >
-                  <h2 className="text-xl font-semibold text-blue-700">
-                    {message.fullname}
-                  </h2>
-                  <p className="text-gray-500">
-                    <strong>Email:</strong>{" "}
-                    <a
-                      href={`mailto:${message.email}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {message.email}
-                    </a>
-                  </p>
-                  <p className="text-gray-800 mt-2">{message.message}</p>
-                  <p className="text-gray-400 text-sm mt-2">
-                    <strong>Sent:</strong>{" "}
-                    {new Date(message.date).toLocaleString("en-GB")}
-                  </p>
-
-                  {/* Action Checkboxes */}
-                  <div className="mt-4 flex gap-6 items-center justify-left ">
-                    <label className="flex items-center gap-1 ">
-                      <input
-                        className="w-fit"
-                        type="checkbox"
-                        checked={message.done || false}
-                        onChange={() => handleDone(message._id)}
-                      />
-                      <span className="text-sm">Done</span>
-                    </label>
-                    <label className="flex items-center gap-1">
-                      <input
-                        className="w-fit"
-                        type="checkbox"
-                        onChange={() => handleHide(message._id)}
-                      />
-                      <span className="text-sm">Hide</span>
-                    </label>
-                  </div>
-                </div>
-              ) : null // Hide the message if it's in hiddenMessages
-          )}
+    <div className="bg-background">
+      <div className="min-h-screen p-5 ">
+        <div className="flex gap-4 items-center self-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-5">Messages</h1>
+          {/* Unhide All Messages Button */}
+          <button
+            onClick={unhideAll}
+            className="mb-5 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+          >
+            Unhide All Messages
+          </button>
         </div>
-      ) : (
-        <p className="text-gray-600">No messages found.</p>
-      )}
+
+        {/* Search Field */}
+        <div className="mb-5">
+          <input
+            type="text"
+            placeholder="Search messages..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full p-3 border border-gray-300 rounded-md bg-white"
+          />
+          <button
+            onClick={clearSearch}
+            className="mt-2 px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600"
+          >
+            Clear Search
+          </button>
+        </div>
+
+        {loading ? (
+          <p className="text-gray-600">Loading messages...</p>
+        ) : filteredMessages.length > 0 ? (
+          <div className="space-y-4">
+            {filteredMessages.map(
+              (message) =>
+                !hiddenMessages.includes(message._id) ? ( // Exclude hidden messages
+                  <div
+                    key={message._id}
+                    className={`p-4 border border-gray-200 bg-white rounded shadow ${
+                      message.done ? "bg-green-100" : ""
+                    }`}
+                  >
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      {message.fullname}
+                    </h2>
+                    <p className="text-gray-500">
+                      <strong>Email:</strong>{" "}
+                      <a
+                        href={`mailto:${message.email}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {message.email}
+                      </a>
+                    </p>
+                    <p className="text-gray-800 mt-2">{message.message}</p>
+                    <p className="text-gray-400 text-sm mt-2">
+                      <strong>Sent:</strong>{" "}
+                      {new Date(message.date).toLocaleString("en-GB")}
+                    </p>
+
+                    {/* Action Checkboxes */}
+                    <div className="mt-4 flex gap-6 items-center justify-left ">
+                      <label className="flex items-center ">
+                        <input
+                          className="w-fit"
+                          type="checkbox"
+                          checked={message.done || false}
+                          onChange={() => handleDone(message._id)}
+                        />
+                        <span className="text-sm">Done</span>
+                      </label>
+                      <label className="flex items-center ">
+                        <input
+                          className="w-fit"
+                          type="checkbox"
+                          onChange={() => handleHide(message._id)}
+                        />
+                        <span className="text-sm">Hide</span>
+                      </label>
+                    </div>
+                  </div>
+                ) : null // Hide the message if it's in hiddenMessages
+            )}
+          </div>
+        ) : (
+          <p className="text-gray-600">No messages found.</p>
+        )}
+      </div>
     </div>
   );
 }
