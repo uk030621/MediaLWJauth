@@ -158,7 +158,7 @@ export default function MessageList() {
 
                     {/* Action Checkboxes */}
                     <div className="mt-4 flex gap-6 items-center justify-left ">
-                      <label className="flex items-center ">
+                      <label className="flex items-center gap-1 ">
                         <input
                           className="w-fit"
                           type="checkbox"
@@ -167,7 +167,7 @@ export default function MessageList() {
                         />
                         <span className="text-sm">Done</span>
                       </label>
-                      <label className="flex items-center ">
+                      <label className="flex items-center gap-1 ">
                         <input
                           className="w-fit"
                           type="checkbox"
