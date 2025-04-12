@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import he from "he"; // Import he to decode HTML entities
+import Image from "next/image"; // Import Image component
 
 const YouTubeSearch = () => {
   const { data: session } = useSession();
@@ -181,9 +182,11 @@ const YouTubeSearch = () => {
               key={video.id.videoId}
               className="border p-4 flex flex-col rounded-md bg-white shadow-md"
             >
-              <img
-                src={video.snippet.thumbnails.medium.url}
-                alt={video.snippet.title}
+              <Image
+                src={video.snippet.thumbnails.medium.url} // Thumbnail URL
+                alt={video.snippet.title} // Alt text for accessibility
+                width={320} // Width of the image (can be adjusted based on your layout)
+                height={180} // Height of the image (can be adjusted based on your layout)
                 className="w-full h-auto rounded-md"
               />
               <div className="mt-3">
