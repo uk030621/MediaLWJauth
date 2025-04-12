@@ -157,23 +157,27 @@ export default function MessageList() {
                     </p>
 
                     {/* Action Checkboxes */}
-                    <div className="mt-4 flex gap-6 items-center justify-left ">
-                      <label className="flex items-center gap-1 ">
+                    <div className="mt-4 flex gap-6 items-center justify-start">
+                      {" "}
+                      {/* Corrected alignment */}
+                      <label className="flex items-center gap-2">
                         <input
-                          className="w-fit"
+                          className="w-4 h-4" // Ensure uniform size for the checkbox
                           type="checkbox"
                           checked={message.done || false}
                           onChange={() => handleDone(message._id)}
                         />
-                        <span className="text-sm">Done</span>
+                        <span className="text-sm ml-1 leading-none">Done</span>{" "}
+                        {/* Proper spacing */}
                       </label>
-                      <label className="flex items-center gap-1 ">
+                      <label className="flex items-center gap-2">
                         <input
-                          className="w-fit"
+                          className="w-4 h-4" // Ensure uniform size for the checkbox
                           type="checkbox"
                           onChange={() => handleHide(message._id)}
                         />
-                        <span className="text-sm">Hide</span>
+                        <span className="text-sm ml-1 leading-none">Hide</span>{" "}
+                        {/* Proper spacing */}
                       </label>
                     </div>
                   </div>
