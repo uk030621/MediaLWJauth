@@ -156,25 +156,24 @@ export default function MessageList() {
                       {new Date(message.date).toLocaleString("en-GB")}
                     </p>
 
-                    {/* Action Checkboxes */}
-                    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 items-center">
-                      <label className="flex items-center gap-x-2">
-                        <input
-                          type="checkbox"
-                          checked={message.done || false}
-                          onChange={() => handleDone(message._id)}
-                          className="w-5 h-5 accent-blue-500" // Defined width, height, and custom color
-                        />
-                        <span className="text-sm font-medium">Done</span>
-                      </label>
-                      <label className="flex items-center gap-x-2">
-                        <input
-                          type="checkbox"
-                          onChange={() => handleHide(message._id)}
-                          className="w-5 h-5 accent-blue-500" // Defined width, height, and custom color
-                        />
-                        <span className="text-sm font-medium">Hide</span>
-                      </label>
+                    {/* Action Buttons */}
+                    <div className="mt-4 flex gap-6 items-center justify-start">
+                      <button
+                        onClick={() => handleDone(message._id)}
+                        className={`px-4 py-2 text-sm rounded ${
+                          message.done
+                            ? "bg-green-500 text-white"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        {message.done ? "Mark as Undone" : "Mark as Done"}
+                      </button>
+                      <button
+                        onClick={() => handleHide(message._id)}
+                        className="px-4 py-2 text-sm bg-red-500 text-white rounded"
+                      >
+                        Hide
+                      </button>
                     </div>
                   </div>
                 ) : null // Hide the message if it's in hiddenMessages
