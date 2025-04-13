@@ -211,7 +211,7 @@ export default function Home() {
           </div>
         )}
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        {error && <p className="text-gray-500 mb-4">{error}</p>}
 
         {loading ? (
           <p className="text-gray-500">Loading...</p>

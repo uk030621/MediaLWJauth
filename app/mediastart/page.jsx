@@ -68,7 +68,7 @@ export default function HomePage() {
                     {dateTime.toLocaleDateString()}
                   </p>
                   <p className="text-sm font-thin text-black">
-                    {dateTime.toLocaleTimeString()}hr
+                    {dateTime.toLocaleTimeString()} hr
                   </p>
                 </>
               ) : (
@@ -97,9 +97,9 @@ export default function HomePage() {
           <div className="mt-2">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-sm text-gray-600 hover:underline"
+              className="w-fit text-sm bg-slate-900 hover:bg-slate-600 text-white px-2 py-1 rounded text-center"
             >
-              {isDropdownOpen ? "Hide Explanation" : "How does this work?"}
+              {isDropdownOpen ? "Hide Guide ▴" : "User Guide ▾"}
             </button>
             {isDropdownOpen && (
               <div className="mt-2 text-left text-sm bg-gray-50 border rounded-lg p-4">

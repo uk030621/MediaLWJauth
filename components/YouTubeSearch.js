@@ -174,7 +174,7 @@ const YouTubeSearch = () => {
           </select>
         </div>
 
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {error && <p className="text-gray-500 mt-4">{error}</p>}
 
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {videos.map((video) => (
