@@ -75,7 +75,18 @@ const YouTubeSearch = () => {
   };
 
   const handleCopyVideoID = async (videoId, title) => {
-    const retryLimit = 3; // Maximum number of retries
+    try {
+      const permission = await navigator.permissions.query({
+        name: "clipboard-write",
+      });
+      if (permission.state !== "granted" && permission.state !== "prompt") {
+        throw new Error("Clipboard permission not granted.");
+      }
+    } catch (err) {
+      console.warn("Clipboard permission check failed:", err);
+    }
+
+    const retryLimit = 3;
     let retryCount = 0;
     let success = false;
 
@@ -84,7 +95,7 @@ const YouTubeSearch = () => {
         await navigator.clipboard.writeText(videoId);
         alert("Video ID copied to clipboard and added to the library!");
         await handleAddMedia(videoId, title);
-        success = true; // Mark as successful
+        success = true;
       } catch (err) {
         retryCount++;
         console.error(
@@ -95,7 +106,6 @@ const YouTubeSearch = () => {
         if (retryCount < retryLimit) {
           console.log("Retrying...");
         } else {
-          console.error("All retry attempts failed.");
           alert("Failed to copy the video ID after several attempts.");
         }
       }
