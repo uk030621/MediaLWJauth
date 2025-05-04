@@ -75,39 +75,58 @@ const YouTubeSearch = () => {
   };
 
   const handleCopyVideoID = async (videoId, title) => {
-    try {
-      const permission = await navigator.permissions.query({
-        name: "clipboard-write",
-      });
-      if (permission.state !== "granted" && permission.state !== "prompt") {
-        throw new Error("Clipboard permission not granted.");
-      }
-    } catch (err) {
-      console.warn("Clipboard permission check failed:", err);
-    }
-
     const retryLimit = 3;
     let retryCount = 0;
     let success = false;
 
+    // Helper fallback using execCommand
+    const fallbackCopyTextToClipboard = (text) => {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Avoid scrolling to bottom
+      textArea.style.position = "fixed";
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.opacity = "0";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand("copy");
+        document.body.removeChild(textArea);
+        return successful;
+      } catch (err) {
+        console.error("Fallback: Failed to copy text:", err);
+        document.body.removeChild(textArea);
+        return false;
+      }
+    };
+
     while (retryCount < retryLimit && !success) {
       try {
         await navigator.clipboard.writeText(videoId);
-        alert("Video ID copied to clipboard and added to the library!");
-        await handleAddMedia(videoId, title);
         success = true;
       } catch (err) {
-        retryCount++;
-        console.error(
-          `Attempt ${retryCount} - Failed to copy the video ID:`,
+        console.warn(
+          `Attempt ${retryCount + 1} failed using clipboard API:`,
           err
         );
+        retryCount++;
 
-        if (retryCount < retryLimit) {
-          console.log("Retrying...");
-        } else {
-          alert("Failed to copy the video ID after several attempts.");
+        if (retryCount === retryLimit) {
+          console.warn("Trying fallback method...");
+          success = fallbackCopyTextToClipboard(videoId);
         }
+      }
+
+      if (success) {
+        alert("Video ID copied to clipboard and added to the library!");
+        await handleAddMedia(videoId, title);
+      } else if (retryCount >= retryLimit) {
+        alert("Failed to copy the video ID after several attempts.");
       }
     }
   };
