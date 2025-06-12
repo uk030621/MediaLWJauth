@@ -6,26 +6,27 @@ import { signOut } from "next-auth/react";
 const INACTIVITY_LIMIT = 20 * 60 * 1000; // 20 minutes
 
 const AutoLogout = () => {
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef(null); // Main inactivity timer
+  const modalTimerRef = useRef(null); // Modal auto-logout timer
   const [showModal, setShowModal] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
 
   useEffect(() => {
     const resetTimer = () => {
-      if (videoPlaying) return; // Don't reset timer if video is playing
+      if (videoPlaying) return;
 
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
-        setShowModal(true); // Show logout modal
-      }, INACTIVITY_LIMIT - 30000); // Trigger 30 sec before logout
+        setShowModal(true);
+      }, INACTIVITY_LIMIT - 30000); // Show modal 30s before logout
     };
 
     const handleUserActivity = () => {
-      if (showModal) setShowModal(false); // Close modal on interaction
+      if (showModal) setShowModal(false);
+      clearTimeout(modalTimerRef.current); // Cancel modal logout if any
       resetTimer();
     };
 
-    // Event listeners for activity detection
     const events = ["mousemove", "keydown", "scroll", "click"];
     events.forEach((event) =>
       window.addEventListener(event, handleUserActivity)
@@ -35,20 +36,33 @@ const AutoLogout = () => {
 
     return () => {
       clearTimeout(timeoutRef.current);
+      clearTimeout(modalTimerRef.current);
       events.forEach((event) =>
         window.removeEventListener(event, handleUserActivity)
       );
     };
   }, [videoPlaying, showModal]);
 
+  useEffect(() => {
+    if (showModal) {
+      // Start 30-second countdown once modal shows
+      modalTimerRef.current = setTimeout(() => {
+        signOut(); // Auto-logout if no response
+      }, 30000);
+    } else {
+      clearTimeout(modalTimerRef.current); // Cancel on modal close
+    }
+  }, [showModal]);
+
   const handleStayLoggedIn = () => {
     setShowModal(false);
-    clearTimeout(timeoutRef.current);
+    clearTimeout(modalTimerRef.current);
   };
 
   const handleLogOut = () => {
     setShowModal(false);
-    setTimeout(() => signOut(), 30000);
+    clearTimeout(modalTimerRef.current);
+    signOut(); // Immediate logout
   };
 
   return (
@@ -60,7 +74,10 @@ const AutoLogout = () => {
               Inactivity Logout Warning
             </h2>
             <p className="text-gray-600 mb-4">
-              Do you want to remain logged in?
+              You’ve been inactive. Do you want to stay logged in?
+            </p>
+            <p className="text-sm text-gray-500 mb-4">
+              You’ll be logged out automatically in 30 seconds.
             </p>
             <div className="flex justify-center space-x-4">
               <button
@@ -73,7 +90,7 @@ const AutoLogout = () => {
                 onClick={handleLogOut}
                 className="px-4 py-2 bg-red-500 text-white rounded-md"
               >
-                ❌ Continue to Log-out
+                ❌ Log-out Now
               </button>
             </div>
           </div>
