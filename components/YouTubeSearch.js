@@ -95,6 +95,7 @@ const YouTubeSearch = () => {
       textArea.select();
 
       try {
+        // @ts-ignore: execCommand is deprecated but used as fallback
         const successful = document.execCommand("copy");
         document.body.removeChild(textArea);
         return successful;
