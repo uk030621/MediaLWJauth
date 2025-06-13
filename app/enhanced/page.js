@@ -34,13 +34,17 @@ export default function Home() {
       if (!res.ok) throw new Error("Failed to fetch URLs");
 
       const data = await res.json();
-      setStoredUrls(data.urls);
-      setFilteredUrls(data.urls);
+
+      // Reverse the array once, safely
+      const reversed = [...data.urls].reverse();
+
+      setStoredUrls(reversed);
+      setFilteredUrls(reversed);
     } catch (err) {
       console.error("Fetch error:", err);
       setError("Failed to load media. Refreshing...");
 
-      // 🚀 **Auto-refresh page after 2 seconds on failure**
+      // 🚀 Auto-refresh page after 2 seconds on failure
       setTimeout(() => {
         window.location.reload();
       }, 2000);
