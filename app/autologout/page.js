@@ -1,30 +1,36 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { signOut } from "next-auth/react";
 
-const INACTIVITY_LIMIT = 20 * 60 * 1000; // 20 minutes
+const INACTIVITY_LIMIT = 400 * 60 * 1000; // 240 minutes
+const MODAL_TIMEOUT = 30 * 1000; // 30 seconds
 
 const AutoLogout = () => {
-  const timeoutRef = useRef(null); // Main inactivity timer
-  const modalTimerRef = useRef(null); // Modal auto-logout timer
+  const timeoutRef = useRef(null); // Inactivity timer
+  const modalTimerRef = useRef(null); // 30s countdown
   const [showModal, setShowModal] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const hasLoggedOutRef = useRef(false); // Prevent modal after logout
 
-  useEffect(() => {
-    const resetTimer = () => {
-      if (videoPlaying) return;
-
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
+  // 🕒 Start inactivity timer
+  const startInactivityTimer = useCallback(() => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      if (!videoPlaying && !hasLoggedOutRef.current) {
         setShowModal(true);
-      }, INACTIVITY_LIMIT - 30000); // Show modal 30s before logout
-    };
+      } else {
+        startInactivityTimer(); // Retry if video is playing
+      }
+    }, INACTIVITY_LIMIT - MODAL_TIMEOUT);
+  }, [videoPlaying]);
 
+  // 📢 Listen for user activity
+  useEffect(() => {
     const handleUserActivity = () => {
-      if (showModal) setShowModal(false);
-      clearTimeout(modalTimerRef.current); // Cancel modal logout if any
-      resetTimer();
+      if (!showModal && !hasLoggedOutRef.current) {
+        startInactivityTimer();
+      }
     };
 
     const events = ["mousemove", "keydown", "scroll", "click"];
@@ -32,7 +38,7 @@ const AutoLogout = () => {
       window.addEventListener(event, handleUserActivity)
     );
 
-    resetTimer();
+    startInactivityTimer();
 
     return () => {
       clearTimeout(timeoutRef.current);
@@ -41,33 +47,63 @@ const AutoLogout = () => {
         window.removeEventListener(event, handleUserActivity)
       );
     };
-  }, [videoPlaying, showModal]);
+  }, [showModal, startInactivityTimer]);
 
+  // 🧠 Modal countdown
   useEffect(() => {
-    if (showModal) {
-      // Start 30-second countdown once modal shows
+    if (showModal && !videoPlaying) {
       modalTimerRef.current = setTimeout(() => {
-        signOut(); // Auto-logout if no response
-      }, 30000);
+        if (!hasLoggedOutRef.current) {
+          hasLoggedOutRef.current = true;
+          setShowModal(false);
+          signOut();
+        }
+      }, MODAL_TIMEOUT);
     } else {
-      clearTimeout(modalTimerRef.current); // Cancel on modal close
+      clearTimeout(modalTimerRef.current);
     }
-  }, [showModal]);
+  }, [showModal, videoPlaying]);
 
+  // 📺 Track video playing state
+  useEffect(() => {
+    const checkVideos = () => {
+      const videos = document.querySelectorAll("video");
+      const playing = Array.from(videos).some(
+        (video) => !video.paused && !video.ended && video.readyState > 2
+      );
+      setVideoPlaying(playing);
+    };
+
+    const observer = new MutationObserver(checkVideos);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    const interval = setInterval(checkVideos, 1000);
+
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
+    };
+  }, []);
+
+  // ✅ Modal actions
   const handleStayLoggedIn = () => {
     setShowModal(false);
     clearTimeout(modalTimerRef.current);
+    if (!hasLoggedOutRef.current) {
+      startInactivityTimer();
+    }
   };
 
   const handleLogOut = () => {
     setShowModal(false);
     clearTimeout(modalTimerRef.current);
-    signOut(); // Immediate logout
+    hasLoggedOutRef.current = true;
+    signOut();
   };
 
   return (
     <>
-      {showModal && (
+      {showModal && !hasLoggedOutRef.current && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center relative">
             <h2 className="text-xl font-semibold mb-4">

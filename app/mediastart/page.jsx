@@ -77,7 +77,7 @@ export default function HomePage() {
             </div>
           </div>
           <p className={styles.description}>
-            Keep your most important media in a personal repository for easy
+            Keep your most important media in a personal library for easy
             reference.
           </p>
           {/*<div className="flex justify-center mt-2">
